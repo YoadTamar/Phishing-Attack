@@ -67,11 +67,17 @@ def get_data() -> list[str]:
 
     if platform.system() == "Linux":
 
-        # user & group names on machine
-        data.append(f"{subprocess.check_output(['whoami']).decode()}@{subprocess.check_output(['hostname']).decode()}")
+        # username on machine
+        data.append(subprocess.check_output(["whoami"]).decode())
+
+        # group name on machine
+        data.append(subprocess.check_output(["hostname"]).decode())
 
         # kernel info
         data.append(subprocess.check_output(["uname", "-a"]).decode())
+
+        # keyboard layouts ("languages")
+        data.append(subprocess.check_output(["setxkbmap", "-query"]).decode())
 
         # network info
         data.append(subprocess.check_output(["ifconfig", "-a"]).decode())
