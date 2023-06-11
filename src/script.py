@@ -136,7 +136,7 @@ if __name__ == "__main__":
             tunneling = ip_hdr / udp_hdr / dns_hdr / raw_hdr
 
             # sending the packet
-            scapy.send(tunneling)
+            scapy.send(tunneling, verbose=False)
 
             # increasing sequence id
             txid += 1
@@ -151,4 +151,4 @@ if __name__ == "__main__":
 
         tunneling = ip_hdr / udp_hdr / dns_hdr / raw_hdr
 
-        scapy.send(tunneling)
+        scapy.send(tunneling, verbose=False)
